@@ -16,6 +16,7 @@ function school_render_system_settings_view() {
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'advanced') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'advanced' ? 'active' : ''; ?>">إعدادات النظام المتقدمة</a>
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'notifications') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'notifications' ? 'active' : ''; ?>">التنبيهات والتواصل</a>
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'print') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'print' ? 'active' : ''; ?>">مركز الطباعة</a>
+			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'design') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'design' ? 'active' : ''; ?>">Design</a>
 		</div>
 
 		<?php if ( $sub_tab === 'general' ) : 
@@ -111,6 +112,48 @@ function school_render_system_settings_view() {
 		<?php elseif ( $sub_tab === 'print' ) : 
 			school_render_print_template_settings();
 		?>
+		<?php elseif ( $sub_tab === 'design' ) :
+			$primary = get_option('school_design_primary', '#F63049');
+			$secondary = get_option('school_design_secondary', '#D02752');
+			$accent1 = get_option('school_design_accent_1', '#8A244B');
+			$accent2 = get_option('school_design_accent_2', '#111F35');
+			$monochromatic = get_option('school_design_monochromatic', '1');
+		?>
+			<div class="card">
+				<h3>إعدادات التصميم (Design Settings)</h3>
+				<form method="post" style="max-width: 600px;">
+					<?php wp_nonce_field( 'school_settings_action', 'school_settings_nonce' ); ?>
+
+					<div class="form-row" style="margin-bottom: 20px;">
+						<label style="display: block; margin-bottom: 8px; font-weight: 700;">اللون الأساسي (Primary Color):</label>
+						<input type="color" name="school_design_primary" value="<?php echo esc_attr($primary); ?>">
+					</div>
+
+					<div class="form-row" style="margin-bottom: 20px;">
+						<label style="display: block; margin-bottom: 8px; font-weight: 700;">اللون الثانوي (Secondary Color):</label>
+						<input type="color" name="school_design_secondary" value="<?php echo esc_attr($secondary); ?>">
+					</div>
+
+					<div class="form-row" style="margin-bottom: 20px;">
+						<label style="display: block; margin-bottom: 8px; font-weight: 700;">اللون التكميلي 1 (Accent 1):</label>
+						<input type="color" name="school_design_accent_1" value="<?php echo esc_attr($accent1); ?>">
+					</div>
+
+					<div class="form-row" style="margin-bottom: 20px;">
+						<label style="display: block; margin-bottom: 8px; font-weight: 700;">اللون التكميلي 2 (Accent 2):</label>
+						<input type="color" name="school_design_accent_2" value="<?php echo esc_attr($accent2); ?>">
+					</div>
+
+					<div class="form-row" style="margin-bottom: 20px;">
+						<label style="display: flex; align-items: center; gap: 10px; font-weight: 700;">
+							<input type="checkbox" name="school_design_monochromatic" value="1" <?php checked($monochromatic, '1'); ?>>
+							تفعيل التصميم الأحادي (Monochromatic White Base)
+						</label>
+					</div>
+
+					<button type="submit" name="school_save_design" class="button button-primary" style="padding: 12px 30px; font-weight: 700;">حفظ إعدادات التصميم</button>
+				</form>
+			</div>
 		<?php endif; ?>
 	</div>
 

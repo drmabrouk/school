@@ -334,6 +334,14 @@ function school_process_admin_settings_action() {
 		}
 	}
 
+	if ( isset( $_POST['school_save_design'] ) ) {
+		update_option( 'school_design_primary', sanitize_hex_color( $_POST['school_design_primary'] ) );
+		update_option( 'school_design_secondary', sanitize_hex_color( $_POST['school_design_secondary'] ) );
+		update_option( 'school_design_accent_1', sanitize_hex_color( $_POST['school_design_accent_1'] ) );
+		update_option( 'school_design_accent_2', sanitize_hex_color( $_POST['school_design_accent_2'] ) );
+		update_option( 'school_design_monochromatic', isset( $_POST['school_design_monochromatic'] ) ? '1' : '0' );
+	}
+
 	if ( isset( $_POST['school_add_teacher_to_registry'] ) ) {
 		$name   = sanitize_text_field( $_POST['teacher_name'] );
 		$emp_id = sanitize_text_field( $_POST['teacher_employee_id'] );

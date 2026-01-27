@@ -142,6 +142,36 @@ add_action( 'wp_enqueue_scripts', 'school_enqueue_assets' );
 add_action( 'admin_enqueue_scripts', 'school_enqueue_assets' );
 
 /**
+ * Output dynamic design CSS based on settings.
+ */
+function school_output_design_css() {
+	$primary = get_option('school_design_primary', '#F63049');
+	$secondary = get_option('school_design_secondary', '#D02752');
+	$accent1 = get_option('school_design_accent_1', '#8A244B');
+	$accent2 = get_option('school_design_accent_2', '#111F35');
+	$monochromatic = get_option('school_design_monochromatic', '1');
+
+	?>
+	<style id="school-dynamic-design">
+		:root {
+			--school-primary: <?php echo esc_attr($primary); ?>;
+			--school-secondary: <?php echo esc_attr($secondary); ?>;
+			--school-accent-1: <?php echo esc_attr($accent1); ?>;
+			--school-accent-2: <?php echo esc_attr($accent2); ?>;
+			--school-primary-hover: <?php echo esc_attr($secondary); ?>;
+			--school-danger: <?php echo esc_attr($primary); ?>;
+			--school-text-main: <?php echo esc_attr($accent2); ?>;
+			<?php if ( $monochromatic === '1' ) : ?>
+			--school-bg-white: #ffffff;
+			<?php endif; ?>
+		}
+	</style>
+	<?php
+}
+add_action( 'wp_head', 'school_output_design_css', 100 );
+add_action( 'admin_head', 'school_output_design_css', 100 );
+
+/**
  * Add a body class for the teacher portal.
  */
 function school_portal_body_class( $classes ) {
