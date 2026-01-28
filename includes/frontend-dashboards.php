@@ -47,26 +47,26 @@ function school_render_supervisor_dashboard() {
 						<li class="nav-analytics <?php echo $current_tab === 'analytics' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'analytics' ) ); ?>">لوحة المعلومات</a>
 						</li>
+						<li class="nav-lessons <?php echo $current_tab === 'lessons' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'lessons' ) ); ?>">تحضيرات الدروس</a>
+						</li>
 						<li class="nav-teacher-mgmt <?php echo $current_tab === 'teacher_mgmt' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'teacher_mgmt' ) ); ?>">إدارة شؤون المعلمين</a>
 						</li>
 						<li class="nav-coord-assign <?php echo $current_tab === 'coordinators' ? 'active' : ''; ?>">
-							<a href="<?php echo esc_url( add_query_arg( 'tab', 'coordinators' ) ); ?>">تنسيق المواد</a>
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'coordinators' ) ); ?>">تكليف منسقي المواد</a>
 						</li>
 						<li class="nav-subjects <?php echo $current_tab === 'subjects' ? 'active' : ''; ?>">
-							<a href="<?php echo esc_url( add_query_arg( 'tab', 'subjects' ) ); ?>">قائمة المواد</a>
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'subjects' ) ); ?>">إدارة المواد الأكاديمية</a>
 						</li>
-						<li class="nav-users <?php echo $current_tab === 'users' ? 'active' : ''; ?>">
-							<a href="<?php echo esc_url( add_query_arg( 'tab', 'users' ) ); ?>">مستخدمي النظام</a>
-						</li>
-						<li class="nav-lessons <?php echo $current_tab === 'lessons' ? 'active' : ''; ?>">
-							<a href="<?php echo esc_url( add_query_arg( 'tab', 'lessons' ) ); ?>">تحضيرات الدروس</a>
+						<li class="nav-late-reports <?php echo $current_tab === 'late_reports' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'late_reports' ) ); ?>">تقارير التأخير</a>
 						</li>
 						<li class="nav-print <?php echo $current_tab === 'print' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'print' ) ); ?>">مركز الطباعة</a>
 						</li>
-						<li class="nav-late-reports <?php echo $current_tab === 'late_reports' ? 'active' : ''; ?>">
-							<a href="<?php echo esc_url( add_query_arg( 'tab', 'late_reports' ) ); ?>">تقارير التأخير</a>
+						<li class="nav-users <?php echo $current_tab === 'users' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'users' ) ); ?>">مستخدمي النظام</a>
 						</li>
 						<li class="nav-settings <?php echo $current_tab === 'settings' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'settings' ) ); ?>">إعدادات النظام</a>
@@ -133,6 +133,21 @@ function school_render_dashboard_top_bar( $title ) {
 	$current_user = wp_get_current_user();
 	$today = date_i18n( 'l j F Y' );
 	$late_count = school_get_late_count();
+
+	$role_names = array(
+		'administrator'      => 'مدير النظام',
+		'school_manager'     => 'مدير المدرسة',
+		'school_supervisor'  => 'مشرف تربوي',
+		'school_coordinator' => 'منسق مادة',
+		'school_teacher'     => 'معلم',
+	);
+	$user_role = 'مستخدم';
+	foreach ( $role_names as $role => $name ) {
+		if ( in_array( $role, $current_user->roles ) ) {
+			$user_role = $name;
+			break;
+		}
+	}
 	?>
 	<div class="dashboard-top-bar-enhanced">
 		<div class="top-bar-brand-section">
@@ -141,7 +156,10 @@ function school_render_dashboard_top_bar( $title ) {
 			if($logo): ?>
 				<img src="<?php echo esc_url($logo); ?>" class="top-bar-logo" style="max-height: 40px; margin-left: 15px;">
 			<?php endif; ?>
-			<h1 class="dashboard-main-title"><?php echo esc_html( $title ); ?></h1>
+			<div class="header-titles-group">
+				<h1 class="dashboard-main-title">لوحة الإدارة</h1>
+				<div class="user-role-subtitle"><?php echo esc_html($user_role); ?></div>
+			</div>
 			<div class="vertical-separator"></div>
 			<div class="welcome-greeting">السلام عليكم، <?php echo esc_html( $current_user->display_name ); ?></div>
 		</div>

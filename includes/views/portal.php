@@ -223,9 +223,9 @@ function school_render_teacher_portal() {
 						echo '<div style="padding: 40px; text-align: center; color: #94a3b8;">لا يوجد تسليمات سابقة لهذه المادة.</div>';
 					} else {
 						$status_map = array(
-							'submitted' => 'تم التسليم',
-							'approved'  => 'معتمد',
-							'late'      => 'متأخر',
+							'submitted' => 'قام المعلم بتسليم التحضير',
+							'approved'  => 'قام المعلم بتسليم التحضير',
+							'late'      => 'المعلم متأخر في التسليم',
 						);
 						?>
 						<table class="wp-list-table widefat striped history-table-portal">

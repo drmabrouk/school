@@ -18,14 +18,14 @@
     --school-text-main: #111F35;
     --school-text-muted: #64748b;
     --school-card-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    --school-font-family: inherit;
+    --school-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     --school-font-size: 16px;
 }
 
 .school-advanced-dashboard, .school-dashboard-container {
     direction: rtl;
     text-align: right;
-    font-family: inherit;
+    font-family: var(--school-font-family);
     color: var(--school-text-main);
     background-color: var(--school-bg-white) !important;
     padding: 5px 20px; /* Reduced vertical padding */
@@ -65,11 +65,25 @@ body.admin-bar .dashboard-top-bar-enhanced {
     gap: 20px;
 }
 
+.header-titles-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .dashboard-main-title {
     margin: 0;
     font-size: 20px;
     font-weight: 700;
     color: var(--school-text-main);
+    line-height: 1.2;
+}
+
+.user-role-subtitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--school-primary);
+    margin-top: 2px;
 }
 
 .vertical-separator {

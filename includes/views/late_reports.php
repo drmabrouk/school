@@ -150,8 +150,8 @@ function school_render_late_reports_view() {
 					$results = $wpdb->get_results( $query );
 
 					$status_map = array(
-						'submitted' => 'مكتمل',
-						'late'      => 'متأخر',
+						'submitted' => 'قام المعلم بتسليم التحضير',
+						'late'      => 'المعلم متأخر في التسليم',
 						'pending'   => 'قيد الانتظار',
 					);
 					$notif_settings = get_option( 'school_notification_settings', array( 'whatsapp_manual' => true ) );
