@@ -200,7 +200,11 @@ function school_render_teacher_portal() {
 					<input type="hidden" name="teacher_id" value="<?php echo $teacher_id; ?>">
 					<input type="hidden" name="subject_id" value="<?php echo $subject_id; ?>">
 					
-					<p style="color: #64748b; margin-bottom: 20px;">سيتم توليد عنوان الدرس تلقائياً بناءً على تاريخ اليوم وترتيب التحضير.</p>
+					<p style="color: #64748b; margin-bottom: 20px;">
+						أنت تقوم الآن بتقديم تحضير ليوم <strong><?php echo date_i18n('l'); ?></strong> الموافق <strong><?php echo date_i18n('j F Y'); ?></strong>.
+						<br>
+						سيتم توليد عنوان الدرس تلقائياً بناءً على هذا التاريخ.
+					</p>
 					
 					<div class="form-row" style="margin-bottom: 25px;">
 						<label style="font-weight: 700; display: block; margin-bottom: 10px;">ملف التحضير (PDF أو صور):</label>

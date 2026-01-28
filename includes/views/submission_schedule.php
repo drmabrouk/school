@@ -5,6 +5,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function school_render_submission_schedule_view() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		echo '<p>عذراً، هذا القسم متاح فقط لمديري النظام.</p>';
+		return;
+	}
 	$sub_days = get_option('school_submission_days', array('Monday', 'Tuesday', 'Wednesday', 'Thursday'));
 	$deadline = get_option('school_submission_deadline', '07:00');
 	$weekly_depts = get_option('school_weekly_departments', array('pe', 'health'));

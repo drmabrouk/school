@@ -171,8 +171,16 @@ function school_render_late_reports_view() {
 						
 						$wa_url = '';
 						if ( !empty($notif_settings['whatsapp_manual']) && $phone && $r->status === 'late' ) {
-							$msg = rawurlencode( "السلام عليكم أستاذ " . $name . "، نود تذكيركم بتأخر تسليم تحضير مادة " . ($all_subjects[$r->subject_id]['name'] ?? ($all_subjects[$r->subject_id] ?? '')) . " للأسبوع " . $r->week_start_date . ". يرجى المبادرة بالتسليم." );
-							$wa_url = "https://wa.me/" . preg_replace('/[^0-9]/', '', $phone) . "?text=" . $msg;
+							$template = $notif_settings['whatsapp_template'] ?? "السلام عليكم أستاذ {teacher_name}، نود تذكيركم بتأخر تسليم تحضير مادة {subject_name} للأسبوع {week_date}. يرجى المبادرة بالتسليم.";
+							$sname = ($all_subjects[$r->subject_id]['name'] ?? ($all_subjects[$r->subject_id] ?? ''));
+
+							$msg = str_replace(
+								array('{teacher_name}', '{subject_name}', '{week_date}'),
+								array($name, $sname, $r->week_start_date),
+								$template
+							);
+
+							$wa_url = "https://wa.me/" . preg_replace('/[^0-9]/', '', $phone) . "?text=" . rawurlencode($msg);
 						}
 					?>
 						<tr>

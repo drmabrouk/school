@@ -26,8 +26,9 @@ function school_notify_teacher_late_submission( $teacher_id, $subject_id ) {
 
 	$to = $teacher->email;
 	$display_name = $teacher->name;
-	$subject = 'تذكير: لم يتم تسليم تحضير الدرس';
-	$message = sprintf( "عزيزي المعلم %s,\n\nنود تذكيرك بأن موعد تسليم تحضير درس مادة (%s) قد مضى ولم يتم استلام التحضير بعد.\n\nيرجى تسليم التحضير في أقرب وقت ممكن.", $display_name, $subject_name );
+	$school_name = get_option('school_name', 'مدرستنا');
+	$subject = 'تنبيه إداري: تذكير بموعد تسليم تحضير الدرس - ' . $school_name;
+	$message = sprintf( "الأستاذ الفاضل / %s المحترم,\n\nتحية طيبة وبعد،،\n\nنود إحاطتكم علماً بأن النظام لم يرصد استلام تحضير درس مادة (%s) حتى اللحظة. نرجو منكم التكرم بالدخول على بوابة المعلم وتسليم التحضير لضمان انتظام سير العملية التعليمية وتقييم الامتثال الأسبوعي.\n\nشاكرين لكم تعاونكم الدائم.\n\nإدارة %s", $display_name, $subject_name, $school_name );
 
 	wp_mail( $to, $subject, $message );
 }
