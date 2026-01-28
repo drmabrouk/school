@@ -5,6 +5,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function school_render_system_settings_view() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		echo '<p>عذراً، هذا القسم متاح فقط لمديري النظام.</p>';
+		return;
+	}
 	$school_name = get_option( 'school_name', 'مدرستي' );
 	$sub_tab = isset($_GET['sub_tab']) ? sanitize_text_field($_GET['sub_tab']) : 'general';
 	?>

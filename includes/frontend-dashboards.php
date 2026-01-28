@@ -54,9 +54,11 @@ function school_render_supervisor_dashboard() {
 						<li class="nav-teacher-mgmt <?php echo $current_tab === 'teacher_mgmt' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'teacher_mgmt' ) ); ?>">إدارة شؤون المعلمين</a>
 						</li>
+						<?php if ( $is_admin ) : ?>
 						<li class="nav-schedule <?php echo $current_tab === 'schedule' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'schedule' ) ); ?>">جدول مواعيد التسليم</a>
 						</li>
+						<?php endif; ?>
 						<li class="nav-coord-assign <?php echo $current_tab === 'coordinators' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'coordinators' ) ); ?>">تكليف منسقي المواد</a>
 						</li>
@@ -69,9 +71,11 @@ function school_render_supervisor_dashboard() {
 						<li class="nav-users <?php echo $current_tab === 'users' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'users' ) ); ?>">مستخدمي النظام</a>
 						</li>
+						<?php if ( $is_admin ) : ?>
 						<li class="nav-settings <?php echo $current_tab === 'settings' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'settings' ) ); ?>">إعدادات النظام</a>
 						</li>
+						<?php endif; ?>
 					</ul>
 				</nav>
 			</aside>

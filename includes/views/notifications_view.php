@@ -10,6 +10,7 @@ function school_render_notification_settings_view() {
 		'browser_alerts'  => true,
 		'whatsapp_manual' => true,
 		'coordinator_notif' => true,
+		'whatsapp_template' => "السلام عليكم أستاذ {teacher_name}، نود تذكيركم بتأخر تسليم تحضير مادة {subject_name} للأسبوع {week_date}. يرجى المبادرة بالتسليم.",
 	) );
 
 	if ( isset( $_POST['save_notif_settings'] ) && check_admin_referer( 'school_settings_action', 'school_settings_nonce' ) ) {
@@ -18,6 +19,7 @@ function school_render_notification_settings_view() {
 			'browser_alerts'   => isset( $_POST['browser_alerts'] ),
 			'whatsapp_manual'  => isset( $_POST['whatsapp_manual'] ),
 			'coordinator_notif' => isset( $_POST['coordinator_notif'] ),
+			'whatsapp_template' => sanitize_textarea_field( $_POST['whatsapp_template'] ),
 		);
 		update_option( 'school_notification_settings', $notif_settings );
 		echo '<div class="updated"><p>تم حفظ إعدادات التنبيهات بنجاح.</p></div>';
@@ -49,6 +51,14 @@ function school_render_notification_settings_view() {
 						<input type="checkbox" name="coordinator_notif" <?php checked($notif_settings['coordinator_notif']); ?>>
 						تنبيه المنسقين عند وصول تحضيرات جديدة للمراجعة
 					</label>
+
+					<div class="whatsapp-template-section" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+						<label style="display: block; font-weight: 700; margin-bottom: 10px;">قالب رسالة الواتساب:</label>
+						<textarea name="whatsapp_template" rows="4" style="width: 100%; border-radius: 8px; border: 1px solid #ddd; padding: 15px;"><?php echo esc_textarea($notif_settings['whatsapp_template']); ?></textarea>
+						<p style="font-size: 12px; color: #64748b; margin-top: 8px;">
+							الكلمات الدلالية المتاحة: <code>{teacher_name}</code> (اسم المعلم)، <code>{subject_name}</code> (اسم المادة)، <code>{week_date}</code> (تاريخ الأسبوع).
+						</p>
+					</div>
 				</div>
 
 				<button type="submit" name="save_notif_settings" class="button button-primary" style="margin-top: 30px; padding: 12px 24px;">حفظ التغييرات</button>

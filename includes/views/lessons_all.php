@@ -107,8 +107,14 @@ function school_render_all_lessons_view() {
 							<div style="display: flex; flex-direction: column; gap: 8px;">
 								<div style="display: flex; gap: 5px;">
 									<?php if ( !empty($l->pdf_attachment) ) : ?>
-										<a href="<?php echo esc_url($l->pdf_attachment); ?>" target="_blank" class="button button-small" title="عرض الملف">عرض</a>
-										<a href="<?php echo esc_url($l->pdf_attachment); ?>" download class="button button-small" style="background: #64748b; color: #fff;" title="تحميل الملف">تحميل</a>
+										<a href="<?php echo esc_url($l->pdf_attachment); ?>" target="_blank" class="button button-small" title="عرض الملف" style="display: flex; align-items: center; gap: 4px;">
+											<span class="dashicons dashicons-shield-alt" style="font-size: 14px; width: 14px; height: 14px; margin-top: 2px;"></span>
+											عرض
+										</a>
+										<a href="<?php echo esc_url($l->pdf_attachment); ?>" download class="button button-small" style="background: #64748b; color: #fff; display: flex; align-items: center; gap: 4px;" title="تحميل الملف">
+											<span class="dashicons dashicons-download" style="font-size: 14px; width: 14px; height: 14px; margin-top: 2px;"></span>
+											تحميل
+										</a>
 									<?php endif; ?>
 								</div>
 								

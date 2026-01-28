@@ -83,8 +83,18 @@ function school_perform_submission_check() {
 			$sid = intval($sid);
 			if (!$sid) continue;
 
-			// Check for submission TODAY (before the deadline)
-			$start_time = date('Y-m-d H:i:s', strtotime('yesterday ' . date('H:i:s', strtotime(get_option('school_submission_deadline', '07:00')))));
+			// Avoid duplicate checks for the same day
+			$already_checked = $wpdb->get_var( $wpdb->prepare(
+				"SELECT COUNT(*) FROM $table_submissions WHERE teacher_id = %d AND subject_id = %d AND DATE(checked_at) = %s",
+				$t->id,
+				$sid,
+				$today_date
+			) );
+
+			if ( $already_checked > 0 ) continue;
+
+			// Check for submission TODAY (starting from 00:00 of the specified day)
+			$start_time = $today_date . ' 00:00:00';
 			
 			$lesson = $wpdb->get_row( $wpdb->prepare(
 				"SELECT * FROM $table_lessons WHERE teacher_id = %d AND subject_id = %d AND status IN ('submitted', 'approved') AND submission_date >= %s",
