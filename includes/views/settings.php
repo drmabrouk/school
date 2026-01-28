@@ -19,6 +19,7 @@ function school_render_system_settings_view() {
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'general') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'general' ? 'active' : ''; ?>">معلومات المؤسسة</a>
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'notifications') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'notifications' ? 'active' : ''; ?>">التنبيهات والتواصل</a>
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'design') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'design' ? 'active' : ''; ?>">التصميم</a>
+			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'data') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'data' ? 'active' : ''; ?>">إدارة البيانات</a>
 		</div>
 
 		<?php if ( $sub_tab === 'general' ) : 
@@ -65,6 +66,9 @@ function school_render_system_settings_view() {
 
 		<?php elseif ( $sub_tab === 'notifications' ) :
 			school_render_notification_settings_view();
+		?>
+		<?php elseif ( $sub_tab === 'data' ) :
+			school_render_data_management_view();
 		?>
 		<?php elseif ( $sub_tab === 'design' ) :
 			$primary = get_option('school_design_primary', '#F63049');
