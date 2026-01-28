@@ -16,7 +16,7 @@ function school_render_system_settings_view() {
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'advanced') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'advanced' ? 'active' : ''; ?>">إعدادات النظام المتقدمة</a>
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'notifications') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'notifications' ? 'active' : ''; ?>">التنبيهات والتواصل</a>
 			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'print') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'print' ? 'active' : ''; ?>">مركز الطباعة</a>
-			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'design') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'design' ? 'active' : ''; ?>">التصميم (Design)</a>
+			<a href="<?php echo esc_url( add_query_arg('sub_tab', 'design') ); ?>" class="sub-nav-item <?php echo $sub_tab === 'design' ? 'active' : ''; ?>">التصميم</a>
 		</div>
 
 		<?php if ( $sub_tab === 'general' ) : 
@@ -119,14 +119,14 @@ function school_render_system_settings_view() {
 			$accent2 = get_option('school_design_accent_2', '#111F35');
 			$bg_color = get_option('school_design_bg_color', '#ffffff');
 			$highlight = get_option('school_design_highlight', '#fff5f5');
-			$font_family = get_option('school_design_font_family', 'inherit');
 			$font_size = get_option('school_design_font_size', '16px');
 			$logo = get_option('school_logo', '');
 			$monochromatic = get_option('school_design_monochromatic', '1');
+			$dark_mode = get_option('school_design_dark_mode', '0');
 		?>
 			<div class="card school-design-settings-card">
 				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-					<h3 style="margin: 0;">إعدادات مظهر النظام (Visual Identity)</h3>
+					<h3 style="margin: 0;">إعدادات مظهر النظام</h3>
 					<form method="post" style="display: inline;">
 						<?php wp_nonce_field( 'school_settings_action', 'school_settings_nonce' ); ?>
 						<button type="submit" name="school_reset_design" class="button" onclick="return confirm('هل أنت متأكد من استعادة الألوان الافتراضية؟');">استعادة الألوان الافتراضية</button>
@@ -139,34 +139,34 @@ function school_render_system_settings_view() {
 					<div class="design-section-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
 
 						<div class="design-col">
-							<h4 style="border-bottom: 2px solid #eee; padding-bottom: 10px;">لوحة الألوان (Color Palette)</h4>
+							<h4 style="border-bottom: 2px solid #eee; padding-bottom: 10px;">لوحة الألوان</h4>
 
 							<div class="form-row" style="margin-bottom: 20px;">
-								<label style="display: block; margin-bottom: 8px; font-weight: 700;">اللون الأساسي (Primary):</label>
+								<label style="display: block; margin-bottom: 8px; font-weight: 700;">اللون الأساسي:</label>
 								<input type="color" name="school_design_primary" class="live-preview-color" data-var="--school-primary" value="<?php echo esc_attr($primary); ?>">
 							</div>
 
 							<div class="form-row" style="margin-bottom: 20px;">
-								<label style="display: block; margin-bottom: 8px; font-weight: 700;">اللون الثانوي (Secondary):</label>
+								<label style="display: block; margin-bottom: 8px; font-weight: 700;">اللون الثانوي:</label>
 								<input type="color" name="school_design_secondary" class="live-preview-color" data-var="--school-secondary" value="<?php echo esc_attr($secondary); ?>">
 							</div>
 
 							<div class="form-row" style="margin-bottom: 20px;">
-								<label style="display: block; margin-bottom: 8px; font-weight: 700;">لون التمييز (Highlight):</label>
+								<label style="display: block; margin-bottom: 8px; font-weight: 700;">لون التمييز:</label>
 								<input type="color" name="school_design_highlight" class="live-preview-color" data-var="--school-highlight" value="<?php echo esc_attr($highlight); ?>">
 							</div>
 
 							<div class="form-row" style="margin-bottom: 20px;">
-								<label style="display: block; margin-bottom: 8px; font-weight: 700;">لون الخلفية (Background):</label>
+								<label style="display: block; margin-bottom: 8px; font-weight: 700;">لون الخلفية:</label>
 								<input type="color" name="school_design_bg_color" class="live-preview-color" data-var="--school-bg-white" value="<?php echo esc_attr($bg_color); ?>">
 							</div>
 						</div>
 
 						<div class="design-col">
-							<h4 style="border-bottom: 2px solid #eee; padding-bottom: 10px;">الخطوط والشعار (Typography & Branding)</h4>
+							<h4 style="border-bottom: 2px solid #eee; padding-bottom: 10px;">الهوية والبناء البصري</h4>
 
 							<div class="form-row" style="margin-bottom: 20px;">
-								<label style="display: block; margin-bottom: 8px; font-weight: 700;">شعار النظام (System Logo):</label>
+								<label style="display: block; margin-bottom: 8px; font-weight: 700;">شعار النظام:</label>
 								<div style="display: flex; gap: 10px; align-items: center;">
 									<input type="text" name="school_logo" id="school_design_logo_url" value="<?php echo esc_attr($logo); ?>" style="flex: 1;">
 									<button type="button" class="button school-upload-logo-btn" data-target="#school_design_logo_url">رفع شعار</button>
@@ -177,18 +177,15 @@ function school_render_system_settings_view() {
 							</div>
 
 							<div class="form-row" style="margin-bottom: 20px;">
-								<label style="display: block; margin-bottom: 8px; font-weight: 700;">نوع الخط (Font Family):</label>
-								<select name="school_design_font_family" class="live-preview-select" data-var="--school-font-family" style="width: 100%;">
-									<option value="inherit" <?php selected($font_family, 'inherit'); ?>>افتراضي النظام</option>
-									<option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" <?php selected($font_family, "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"); ?>>Segoe UI</option>
-									<option value="'Cairo', sans-serif" <?php selected($font_family, "'Cairo', sans-serif"); ?>>Cairo (Recommended)</option>
-									<option value="'Tajawal', sans-serif" <?php selected($font_family, "'Tajawal', sans-serif"); ?>>Tajawal</option>
-								</select>
+								<label style="display: block; margin-bottom: 8px; font-weight: 700;">حجم الخط الأساسي:</label>
+								<input type="text" name="school_design_font_size" class="live-preview-input" data-var="--school-font-size" value="<?php echo esc_attr($font_size); ?>" placeholder="مثال: 16px" style="width: 100%;">
 							</div>
 
 							<div class="form-row" style="margin-bottom: 20px;">
-								<label style="display: block; margin-bottom: 8px; font-weight: 700;">حجم الخط الأساسي (Font Size):</label>
-								<input type="text" name="school_design_font_size" class="live-preview-input" data-var="--school-font-size" value="<?php echo esc_attr($font_size); ?>" placeholder="e.g. 16px" style="width: 100%;">
+								<label style="display: flex; align-items: center; gap: 10px; font-weight: 700;">
+									<input type="checkbox" name="school_design_dark_mode" value="1" <?php checked($dark_mode, '1'); ?>>
+									تفعيل الوضع الليلي
+								</label>
 							</div>
 						</div>
 					</div>
@@ -196,7 +193,7 @@ function school_render_system_settings_view() {
 					<div class="form-row" style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
 						<label style="display: flex; align-items: center; gap: 10px; font-weight: 700;">
 							<input type="checkbox" name="school_design_monochromatic" value="1" <?php checked($monochromatic, '1'); ?>>
-							تفعيل النمط الاحترافي الأحادي (Monochromatic White Base)
+							تفعيل النمط الاحترافي الأحادي
 						</label>
 						<p style="font-size: 12px; color: #666; margin-right: 25px;">عند تفعيل هذا الخيار، سيتم استخدام اللون الأبيض كخلفية أساسية مع تدرجات هادئة من الألوان المختارة.</p>
 					</div>

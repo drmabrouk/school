@@ -151,9 +151,9 @@ function school_output_design_css() {
 	$accent2 = get_option('school_design_accent_2', '#111F35');
 	$bg_color = get_option('school_design_bg_color', '#ffffff');
 	$highlight = get_option('school_design_highlight', '#fff5f5');
-	$font_family = get_option('school_design_font_family', 'inherit');
 	$font_size = get_option('school_design_font_size', '16px');
 	$monochromatic = get_option('school_design_monochromatic', '1');
+	$dark_mode = get_option('school_design_dark_mode', '0');
 
 	?>
 	<style id="school-dynamic-design">
@@ -167,10 +167,17 @@ function school_output_design_css() {
 			--school-text-main: <?php echo esc_attr($accent2); ?>;
 			--school-bg-white: <?php echo esc_attr($bg_color); ?>;
 			--school-highlight: <?php echo esc_attr($highlight); ?>;
-			--school-font-family: <?php echo $font_family; ?>;
 			--school-font-size: <?php echo esc_attr($font_size); ?>;
 			<?php if ( $monochromatic === '1' ) : ?>
 			--school-bg-white: #ffffff;
+			<?php endif; ?>
+			<?php if ( $dark_mode === '1' ) : ?>
+			--school-bg-white: #111F35;
+			--school-text-main: #ffffff;
+			--school-text-muted: #cbd5e1;
+			--school-border: #1e293b;
+			--school-card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+			--school-highlight: #1e293b;
 			<?php endif; ?>
 		}
 		body, .school-advanced-dashboard, .school-dashboard-container {
