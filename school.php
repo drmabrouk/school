@@ -149,6 +149,10 @@ function school_output_design_css() {
 	$secondary = get_option('school_design_secondary', '#D02752');
 	$accent1 = get_option('school_design_accent_1', '#8A244B');
 	$accent2 = get_option('school_design_accent_2', '#111F35');
+	$bg_color = get_option('school_design_bg_color', '#ffffff');
+	$highlight = get_option('school_design_highlight', '#fff5f5');
+	$font_family = get_option('school_design_font_family', 'inherit');
+	$font_size = get_option('school_design_font_size', '16px');
 	$monochromatic = get_option('school_design_monochromatic', '1');
 
 	?>
@@ -161,9 +165,17 @@ function school_output_design_css() {
 			--school-primary-hover: <?php echo esc_attr($secondary); ?>;
 			--school-danger: <?php echo esc_attr($primary); ?>;
 			--school-text-main: <?php echo esc_attr($accent2); ?>;
+			--school-bg-white: <?php echo esc_attr($bg_color); ?>;
+			--school-highlight: <?php echo esc_attr($highlight); ?>;
+			--school-font-family: <?php echo $font_family; ?>;
+			--school-font-size: <?php echo esc_attr($font_size); ?>;
 			<?php if ( $monochromatic === '1' ) : ?>
 			--school-bg-white: #ffffff;
 			<?php endif; ?>
+		}
+		body, .school-advanced-dashboard, .school-dashboard-container {
+			font-family: var(--school-font-family);
+			font-size: var(--school-font-size);
 		}
 	</style>
 	<?php

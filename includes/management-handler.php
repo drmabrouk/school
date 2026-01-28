@@ -339,7 +339,24 @@ function school_process_admin_settings_action() {
 		update_option( 'school_design_secondary', sanitize_hex_color( $_POST['school_design_secondary'] ) );
 		update_option( 'school_design_accent_1', sanitize_hex_color( $_POST['school_design_accent_1'] ) );
 		update_option( 'school_design_accent_2', sanitize_hex_color( $_POST['school_design_accent_2'] ) );
+		update_option( 'school_design_bg_color', sanitize_hex_color( $_POST['school_design_bg_color'] ) );
+		update_option( 'school_design_highlight', sanitize_hex_color( $_POST['school_design_highlight'] ) );
+		update_option( 'school_design_font_family', sanitize_text_field( $_POST['school_design_font_family'] ) );
+		update_option( 'school_design_font_size', sanitize_text_field( $_POST['school_design_font_size'] ) );
+		update_option( 'school_logo', esc_url_raw( $_POST['school_logo'] ) );
 		update_option( 'school_design_monochromatic', isset( $_POST['school_design_monochromatic'] ) ? '1' : '0' );
+	}
+
+	if ( isset( $_POST['school_reset_design'] ) ) {
+		update_option( 'school_design_primary', '#F63049' );
+		update_option( 'school_design_secondary', '#D02752' );
+		update_option( 'school_design_accent_1', '#8A244B' );
+		update_option( 'school_design_accent_2', '#111F35' );
+		update_option( 'school_design_bg_color', '#ffffff' );
+		update_option( 'school_design_highlight', '#fff5f5' );
+		update_option( 'school_design_font_family', 'inherit' );
+		update_option( 'school_design_font_size', '16px' );
+		update_option( 'school_design_monochromatic', '1' );
 	}
 
 	if ( isset( $_POST['school_add_teacher_to_registry'] ) ) {
