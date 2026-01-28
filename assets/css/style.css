@@ -14,6 +14,7 @@
     --school-danger: #F63049;
     --school-warning: #854d0e;
     --school-bg-white: #ffffff;
+    --school-bg-alt: #f8fafc;
     --school-border: #eeeeee;
     --school-text-main: #111F35;
     --school-text-muted: #64748b;
@@ -37,7 +38,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #ffffff;
+    background: var(--school-bg-alt);
     border-bottom: 1px solid var(--school-border);
     padding: 12px 40px;
     position: fixed;
@@ -229,13 +230,13 @@ body.admin-bar .dashboard-top-bar-enhanced {
 .dashboard-body {
     display: flex;
     gap: 30px;
-    margin-top: 60px; /* Further reduced offset for fixed header */
+    margin-top: 100px; /* Increased margin for clear separation from top bar */
 }
 
 .dashboard-sidebar {
     width: 240px;
     border: 1px solid var(--school-border);
-    background: #ffffff;
+    background: var(--school-bg-alt);
     padding: 20px;
     border-radius: 12px;
     height: fit-content;

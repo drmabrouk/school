@@ -31,7 +31,7 @@ function school_render_user_management_view() {
 				<?php wp_nonce_field( 'school_add_user_action', 'school_add_user_nonce' ); ?>
 				<div class="grid-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
 					<div class="form-row">
-						<label>اسم المستخدم (Login):</label>
+						<label>اسم المستخدم:</label>
 						<input type="text" name="user_login" required style="width: 100%;">
 					</div>
 					<div class="form-row">
@@ -39,7 +39,7 @@ function school_render_user_management_view() {
 						<input type="text" name="display_name" required style="width: 100%;">
 					</div>
 					<div class="form-row">
-						<label>رقم الهاتف (واتساب):</label>
+						<label>رقم الهاتف:</label>
 						<input type="text" name="phone_number" placeholder="9665xxxxxxxx" style="width: 100%;">
 					</div>
 					<div class="form-row">
@@ -64,15 +64,28 @@ function school_render_user_management_view() {
 		</div>
 		
 		<?php foreach ( $roles as $role_slug => $role_label ) : 
-			$users = get_users( array( 'role' => $role_slug ) );
-			// Filter out System Administrator (user with ID 1)
-			$users = array_filter( $users, function($u) {
-				return $u->ID != 1;
-			});
+			$limit = 5;
+			$paged_key = 'paged_' . $role_slug;
+			$paged = isset($_GET[$paged_key]) ? max(1, intval($_GET[$paged_key])) : 1;
+
+			$args = array(
+				'role'    => $role_slug,
+				'number'  => $limit,
+				'offset'  => ($paged - 1) * $limit,
+				'orderby' => 'ID',
+				'order'   => 'DESC',
+				'count_total' => true,
+				'exclude' => array(1), // Exclude System Admin
+			);
+			$user_query = new WP_User_Query($args);
+			$users = $user_query->get_results();
+			$total_items = $user_query->get_total();
+			$total_pages = ceil($total_items / $limit);
+
 			if ( empty($users) ) continue;
 		?>
 			<div class="card">
-				<h3><?php echo $role_label; ?> (<?php echo count($users); ?>)</h3>
+				<h3><?php echo $role_label; ?> (<?php echo $total_items; ?>)</h3>
 				<table class="wp-list-table widefat striped">
 					<thead><tr><th>الاسم</th><th>البريد الإلكتروني</th><th>الإجراءات</th></tr></thead>
 					<tbody>
@@ -87,6 +100,13 @@ function school_render_user_management_view() {
 						<?php endforeach; ?>
 					</tbody>
 				</table>
+				<?php if($total_pages > 1): ?>
+					<div class="pagination" style="margin-top: 15px; display: flex; gap: 5px;">
+						<?php for($i=1; $i<=$total_pages; $i++): ?>
+							<a href="<?php echo esc_url( add_query_arg($paged_key, $i) ); ?>" class="button button-small <?php echo ($i === $paged) ? 'button-primary' : ''; ?>"><?php echo $i; ?></a>
+						<?php endfor; ?>
+					</div>
+				<?php endif; ?>
 			</div>
 		<?php endforeach; ?>
 	</div>

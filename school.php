@@ -172,11 +172,12 @@ function school_output_design_css() {
 			--school-bg-white: #ffffff;
 			<?php endif; ?>
 			<?php if ( $dark_mode === '1' ) : ?>
-			--school-bg-white: #111F35;
+			--school-bg-white: #1a273e;
+			--school-bg-alt: #111F35;
 			--school-text-main: #ffffff;
 			--school-text-muted: #cbd5e1;
-			--school-border: #1e293b;
-			--school-card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+			--school-border: #2d3a4f;
+			--school-card-shadow: 0 4px 12px rgba(0,0,0,0.5);
 			--school-highlight: #1e293b;
 			<?php endif; ?>
 		}

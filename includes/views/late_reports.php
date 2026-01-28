@@ -146,7 +146,16 @@ function school_render_late_reports_view() {
 							$query .= " AND 1=0"; // No results
 						}
 					}
-					$query .= " ORDER BY checked_at DESC LIMIT 100";
+
+					$limit = 5;
+					$paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+					$offset = ($paged - 1) * $limit;
+
+					$count_query = str_replace("SELECT *", "SELECT COUNT(*)", $query);
+					$total_items = $wpdb->get_var($count_query);
+					$total_pages = ceil($total_items / $limit);
+
+					$query .= $wpdb->prepare(" ORDER BY checked_at DESC LIMIT %d OFFSET %d", $limit, $offset);
 					$results = $wpdb->get_results( $query );
 
 					$status_map = array(
@@ -185,6 +194,13 @@ function school_render_late_reports_view() {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+			<?php if($total_pages > 1): ?>
+				<div class="pagination" style="margin-top: 20px; display: flex; gap: 5px; justify-content: center;">
+					<?php for($i=1; $i<=$total_pages; $i++): ?>
+						<a href="<?php echo esc_url( add_query_arg('paged', $i) ); ?>" class="button <?php echo ($i === $paged) ? 'button-primary' : ''; ?>"><?php echo $i; ?></a>
+					<?php endfor; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 	<?php

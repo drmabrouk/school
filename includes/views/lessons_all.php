@@ -24,8 +24,15 @@ function school_render_all_lessons_view() {
 		$where[] = $wpdb->prepare("status = %s", $f_status);
 	}
 
+	$limit = 5;
+	$paged = isset($_GET['paged_lessons']) ? max(1, intval($_GET['paged_lessons'])) : 1;
+	$offset = ($paged - 1) * $limit;
 	$where_str = implode(" AND ", $where);
-	$lessons = $wpdb->get_results( "SELECT * FROM $table_lessons WHERE $where_str ORDER BY submission_date DESC LIMIT 100" );
+
+	$total_items = $wpdb->get_var("SELECT COUNT(*) FROM $table_lessons WHERE $where_str");
+	$total_pages = ceil($total_items / $limit);
+
+	$lessons = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table_lessons WHERE $where_str ORDER BY submission_date DESC LIMIT %d OFFSET %d", $limit, $offset) );
 
 	?>
 	<div class="content-section">
@@ -121,6 +128,95 @@ function school_render_all_lessons_view() {
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		<?php if($total_pages > 1): ?>
+			<div class="pagination" style="margin-top: 20px; display: flex; gap: 5px; justify-content: center;">
+				<?php for($i=1; $i<=$total_pages; $i++): ?>
+					<a href="<?php echo esc_url( add_query_arg('paged_lessons', $i) ); ?>" class="button <?php echo ($i === $paged) ? 'button-primary' : ''; ?>"><?php echo $i; ?></a>
+				<?php endfor; ?>
+			</div>
+		<?php endif; ?>
+
+		<div class="card" style="margin-top: 40px;">
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+				<h3 style="margin: 0;">نشاطات التسليم التفصيلية (الوقت والامتثال)</h3>
+				<a href="<?php echo esc_url( add_query_arg( 'export_csv', '1' ) ); ?>" class="button button-primary">تصدير التقرير الكامل</a>
+			</div>
+			<table class="wp-list-table widefat fixed striped sortable-table">
+				<thead>
+					<tr>
+						<th>المعلم</th>
+						<th>المادة</th>
+						<th>وقت التسليم</th>
+						<th>الحالة الزمنية</th>
+						<th>الفرق بالدقائق</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					$table_schedule = $wpdb->prefix . 'school_schedule';
+					$table_submissions = $wpdb->prefix . 'school_submissions';
+
+					$limit_activity = 5;
+					$paged_activity = isset($_GET['paged_activity']) ? max(1, intval($_GET['paged_activity'])) : 1;
+					$offset_activity = ($paged_activity - 1) * $limit_activity;
+					$total_activity = $wpdb->get_var("SELECT COUNT(*) FROM $table_submissions");
+					$total_pages_activity = ceil($total_activity / $limit_activity);
+
+					$recent_submissions = $wpdb->get_results( $wpdb->prepare("
+						SELECT s.*, l.submission_date, sch.due_time, sch.due_day
+						FROM $table_submissions s
+						LEFT JOIN $table_lessons l ON s.lesson_id = l.lesson_id
+						LEFT JOIN $table_schedule sch ON s.teacher_id = sch.teacher_id AND s.subject_id = sch.subject_id
+						ORDER BY s.checked_at DESC LIMIT %d OFFSET %d
+					", $limit_activity, $offset_activity) );
+
+					foreach ( $recent_submissions as $r ) :
+						$t_idx = $wpdb->get_row($wpdb->prepare("SELECT name FROM {$wpdb->prefix}school_teachers WHERE id = %d", $r->teacher_id));
+						$teacher_name = $t_idx ? $t_idx->name : 'معلم غير معروف';
+
+						$diff_html = '-';
+						$timeliness_label = 'غير محدد';
+						$badge_class = 'status-pending';
+
+						if ( $r->submission_date && $r->due_time ) {
+							$submitted_time = strtotime( $r->submission_date );
+							$due_timestamp = strtotime( date('Y-m-d', $submitted_time) . ' ' . $r->due_time );
+
+							$diff_seconds = $due_timestamp - $submitted_time;
+							$diff_minutes = round( abs($diff_seconds) / 60 );
+
+							if ( $diff_seconds >= 0 ) {
+								$timeliness_label = 'مبكر';
+								$diff_html = "<span style='color: var(--school-success);'>$diff_minutes دقيقة مبكراً</span>";
+								$badge_class = 'status-submitted';
+							} else {
+								$timeliness_label = 'متأخر';
+								$diff_html = "<span style='color: var(--school-danger);'>$diff_minutes دقيقة تأخير</span>";
+								$badge_class = 'status-late';
+							}
+						}
+					?>
+						<tr>
+							<td style="font-weight: 600;"><?php echo esc_html( $teacher_name ); ?></td>
+							<td><?php
+								$sdata = $all_subjects[ $r->subject_id ] ?? 'N/A';
+								echo esc_html( is_array($sdata) ? $sdata['name'] : $sdata );
+							?></td>
+							<td style="font-size: 13px;"><?php echo $r->submission_date ? esc_html( date( 'H:i (Y/m/d)', strtotime( $r->submission_date ) ) ) : 'لم يتم التسليم'; ?></td>
+							<td><span class="status-badge <?php echo $badge_class; ?>"><?php echo $timeliness_label; ?></span></td>
+							<td style="font-weight: bold;"><?php echo $diff_html; ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+			<?php if($total_pages_activity > 1): ?>
+				<div class="pagination" style="margin-top: 20px; display: flex; gap: 5px; justify-content: center;">
+					<?php for($i=1; $i<=$total_pages_activity; $i++): ?>
+						<a href="<?php echo esc_url( add_query_arg('paged_activity', $i) ); ?>" class="button <?php echo ($i === $paged_activity) ? 'button-primary' : ''; ?>"><?php echo $i; ?></a>
+					<?php endfor; ?>
+				</div>
+			<?php endif; ?>
+		</div>
 	</div>
 	<?php
 }

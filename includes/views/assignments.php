@@ -6,7 +6,21 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 function school_render_coordinator_assignment_view() {
 	$subjects = get_option( 'school_subjects', array() );
-	$coordinators = get_users( array( 'role' => 'school_coordinator' ) );
+
+	$limit = 5;
+	$paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+	$args = array(
+		'role'    => 'school_coordinator',
+		'number'  => $limit,
+		'offset'  => ($paged - 1) * $limit,
+		'orderby' => 'ID',
+		'order'   => 'DESC',
+		'count_total' => true,
+	);
+	$coord_query = new WP_User_Query($args);
+	$coordinators = $coord_query->get_results();
+	$total_items = $coord_query->get_total();
+	$total_pages = ceil($total_items / $limit);
 	?>
 	<div class="content-section">
 		<h2>تكليف منسقي المواد الدراسية</h2>
@@ -57,6 +71,13 @@ function school_render_coordinator_assignment_view() {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+			<?php if($total_pages > 1): ?>
+				<div class="pagination" style="margin-top: 20px; display: flex; gap: 5px; justify-content: center;">
+					<?php for($i=1; $i<=$total_pages; $i++): ?>
+						<a href="<?php echo esc_url( add_query_arg('paged', $i) ); ?>" class="button <?php echo ($i === $paged) ? 'button-primary' : ''; ?>"><?php echo $i; ?></a>
+					<?php endfor; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 	<?php
