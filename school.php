@@ -124,7 +124,8 @@ register_deactivation_hook( __FILE__, 'school_deactivate' );
  */
 function school_enqueue_assets() {
 	wp_enqueue_style( 'dashicons' );
-	wp_enqueue_style( 'school-style', SCHOOL_PLUGIN_URL . 'assets/css/style.css', array( 'dashicons' ), SCHOOL_PLUGIN_VERSION );
+	wp_enqueue_style( 'google-fonts-rubik', 'https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap', array(), null );
+	wp_enqueue_style( 'school-style', SCHOOL_PLUGIN_URL . 'assets/css/style.css', array( 'dashicons', 'google-fonts-rubik' ), SCHOOL_PLUGIN_VERSION );
 	
 	if ( is_page('dashboard') || is_admin() ) {
 		wp_enqueue_media();
@@ -167,6 +168,7 @@ function school_output_design_css() {
 			--school-text-main: <?php echo esc_attr($accent2); ?>;
 			--school-bg-white: <?php echo esc_attr($bg_color); ?>;
 			--school-highlight: <?php echo esc_attr($highlight); ?>;
+			--school-font-family: 'Rubik', sans-serif;
 			--school-font-size: <?php echo esc_attr($font_size); ?>;
 			<?php if ( $monochromatic === '1' ) : ?>
 			--school-bg-white: #ffffff;

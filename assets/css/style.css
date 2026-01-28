@@ -19,7 +19,7 @@
     --school-text-main: #111F35;
     --school-text-muted: #64748b;
     --school-card-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    --school-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    --school-font-family: 'Rubik', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     --school-font-size: 16px;
 }
 
@@ -281,8 +281,10 @@ body.admin-bar .dashboard-top-bar-enhanced {
 .nav-subjects a::before { content: "\f325"; }
 .nav-teacher-mgmt a::before { content: "\f307"; }
 .nav-teacher-assign a::before { content: "\f498"; }
+.nav-schedule a::before { content: "\f508"; }
 .nav-coord-assign a::before { content: "\f110"; }
 .nav-users a::before { content: "\f338"; }
+.nav-print a::before { content: "\f115"; }
 .nav-settings a::before { content: "\f111"; }
 .nav-my_lessons a::before { content: "\f109"; }
 .nav-new_lesson a::before { content: "\f132"; }
