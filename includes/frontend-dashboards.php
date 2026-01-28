@@ -24,6 +24,8 @@ require_once SCHOOL_PLUGIN_DIR . 'includes/views/lessons_all.php';
 require_once SCHOOL_PLUGIN_DIR . 'includes/views/late_reports.php';
 require_once SCHOOL_PLUGIN_DIR . 'includes/views/coordinator.php';
 require_once SCHOOL_PLUGIN_DIR . 'includes/views/submission_schedule.php';
+require_once SCHOOL_PLUGIN_DIR . 'includes/views/data_management.php';
+require_once SCHOOL_PLUGIN_DIR . 'includes/views/students.php';
 
 /**
  * Render the Supervisor Dashboard.
@@ -53,6 +55,9 @@ function school_render_supervisor_dashboard() {
 						</li>
 						<li class="nav-teacher-mgmt <?php echo $current_tab === 'teacher_mgmt' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'teacher_mgmt' ) ); ?>">إدارة شؤون المعلمين</a>
+						</li>
+						<li class="nav-students <?php echo $current_tab === 'students' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'students' ) ); ?>">إدارة شؤون الطلاب</a>
 						</li>
 						<?php if ( $is_admin ) : ?>
 						<li class="nav-schedule <?php echo $current_tab === 'schedule' ? 'active' : ''; ?>">
@@ -85,6 +90,9 @@ function school_render_supervisor_dashboard() {
 				switch ( $current_tab ) {
 					case 'teacher_mgmt':
 						school_render_teacher_management_unified();
+						break;
+					case 'students':
+						school_render_students_view();
 						break;
 					case 'schedule':
 						school_render_submission_schedule_view();

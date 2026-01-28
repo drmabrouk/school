@@ -90,10 +90,23 @@ function school_create_db_tables() {
 		UNIQUE KEY employee_id (employee_id)
 	) $charset_collate;";
 
+	// Students Table (New requirement for Import/Export)
+	$table_students = $wpdb->prefix . 'school_students';
+	$sql_students = "CREATE TABLE $table_students (
+		id bigint(20) NOT NULL AUTO_INCREMENT,
+		student_id varchar(50) NOT NULL,
+		name varchar(255) NOT NULL,
+		class varchar(100) DEFAULT '',
+		created_at datetime DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY  (id),
+		UNIQUE KEY student_id (student_id)
+	) $charset_collate;";
+
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( $sql_lessons );
 	dbDelta( $sql_schedule );
 	dbDelta( $sql_submissions );
 	dbDelta( $sql_notifs );
 	dbDelta( $sql_teachers );
+	dbDelta( $sql_students );
 }

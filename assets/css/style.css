@@ -281,6 +281,7 @@ body.admin-bar .dashboard-top-bar-enhanced {
 .nav-lessons a::before { content: "\f109"; }
 .nav-subjects a::before { content: "\f325"; }
 .nav-teacher-mgmt a::before { content: "\f307"; }
+.nav-students a::before { content: "\f307"; }
 .nav-teacher-assign a::before { content: "\f498"; }
 .nav-schedule a::before { content: "\f508"; }
 .nav-coord-assign a::before { content: "\f110"; }

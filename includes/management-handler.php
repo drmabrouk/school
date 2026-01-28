@@ -25,6 +25,10 @@ function school_handle_management_actions() {
 		school_process_admin_settings_action();
 	}
 
+	if ( isset( $_POST['school_data_nonce'] ) && wp_verify_nonce( $_POST['school_data_nonce'], 'school_data_action' ) ) {
+		school_handle_data_management_actions();
+	}
+
 	if ( isset( $_GET['remove_teacher_registry'] ) && check_admin_referer( 'school_remove_teacher_registry' ) ) {
 		school_process_remove_teacher_registry();
 	}
@@ -513,4 +517,130 @@ function school_process_add_user() {
 	} else {
 		set_transient( 'school_user_error', $user_id->get_error_message(), 30 );
 	}
+}
+
+/**
+ * Handle data management actions (Sync, Export, Import, Reset).
+ */
+function school_handle_data_management_actions() {
+	if ( ! current_user_can( 'manage_options' ) ) return;
+
+	if ( isset( $_POST['school_sync_data'] ) ) {
+		school_perform_submission_check(); // This already does the recalculation
+		wp_redirect( add_query_arg( array('tab' => 'settings', 'sub_tab' => 'data', 'school_data_synced' => '1'), remove_query_arg('school_data_nonce') ) );
+		exit;
+	}
+
+	if ( isset( $_POST['school_export_data'] ) ) {
+		school_process_export_data();
+	}
+
+	if ( isset( $_POST['school_import_data'] ) ) {
+		school_process_import_data();
+	}
+
+	if ( isset( $_POST['school_factory_reset'] ) ) {
+		school_process_factory_reset();
+	}
+}
+
+function school_process_export_data() {
+	global $wpdb;
+	$data = array();
+	$tables = array(
+		'lessons'       => $wpdb->prefix . 'school_lessons',
+		'schedule'      => $wpdb->prefix . 'school_schedule',
+		'submissions'   => $wpdb->prefix . 'school_submissions',
+		'notifications' => $wpdb->prefix . 'school_notifications',
+		'teachers'      => $wpdb->prefix . 'school_teachers',
+		'students'      => $wpdb->prefix . 'school_students'
+	);
+
+	foreach ( $tables as $key => $table ) {
+		$data['tables'][$key] = $wpdb->get_results( "SELECT * FROM $table", ARRAY_A );
+	}
+
+	// Export Options
+	$options_to_export = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE 'school_%'", ARRAY_A );
+	$data['options'] = $options_to_export;
+
+	$json_data = json_encode( $data );
+	$filename = 'school_backup_' . date('Y-m-d_H-i-s') . '.json';
+
+	header( 'Content-Type: application/json' );
+	header( 'Content-Disposition: attachment; filename=' . $filename );
+	echo $json_data;
+	exit;
+}
+
+function school_process_import_data() {
+	if ( empty( $_FILES['import_file']['tmp_name'] ) ) return;
+
+	global $wpdb;
+	$json_data = file_get_contents( $_FILES['import_file']['tmp_name'] );
+	$data = json_decode( $json_data, true );
+
+	if ( ! $data || ! isset($data['tables']) ) {
+		set_transient( 'school_data_error', 'ملف غير صالح أو بيانات مفقودة.', 30 );
+		return;
+	}
+
+	$tables = array(
+		'lessons'       => $wpdb->prefix . 'school_lessons',
+		'schedule'      => $wpdb->prefix . 'school_schedule',
+		'submissions'   => $wpdb->prefix . 'school_submissions',
+		'notifications' => $wpdb->prefix . 'school_notifications',
+		'teachers'      => $wpdb->prefix . 'school_teachers',
+		'students'      => $wpdb->prefix . 'school_students'
+	);
+
+	foreach ( $tables as $key => $table ) {
+		if ( isset( $data['tables'][$key] ) && is_array( $data['tables'][$key] ) ) {
+			// For simplicity in this task, we'll clear and replace to ensure "State" is restored correctly.
+			// Users usually expect "Import" to mean "Restore" in this context.
+			$wpdb->query( "TRUNCATE TABLE $table" );
+			foreach ( $data['tables'][$key] as $row ) {
+				$wpdb->insert( $table, $row );
+			}
+		}
+	}
+
+	if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
+		foreach ( $data['options'] as $opt ) {
+			update_option( $opt['option_name'], maybe_unserialize( $opt['option_value'] ) );
+		}
+	}
+
+	wp_redirect( add_query_arg( array('tab' => 'settings', 'sub_tab' => 'data', 'school_data_imported' => '1'), remove_query_arg('school_data_nonce') ) );
+	exit;
+}
+
+function school_process_factory_reset() {
+	$password = $_POST['admin_password'];
+	$current_user = wp_get_current_user();
+
+	if ( ! wp_check_password( $password, $current_user->user_pass, $current_user->ID ) ) {
+		set_transient( 'school_data_error', 'كلمة المرور غير صحيحة. لا يمكن إتمام عملية إعادة التعيين.', 30 );
+		return;
+	}
+
+	global $wpdb;
+	$tables = array(
+		$wpdb->prefix . 'school_lessons',
+		$wpdb->prefix . 'school_schedule',
+		$wpdb->prefix . 'school_submissions',
+		$wpdb->prefix . 'school_notifications',
+		$wpdb->prefix . 'school_teachers',
+		$wpdb->prefix . 'school_students'
+	);
+
+	foreach ( $tables as $table ) {
+		$wpdb->query( "TRUNCATE TABLE $table" );
+	}
+
+	// Reset school_ options
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'school_%'" );
+
+	wp_redirect( add_query_arg( array('tab' => 'settings', 'sub_tab' => 'data', 'school_data_reset' => '1'), remove_query_arg('school_data_nonce') ) );
+	exit;
 }
