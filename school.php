@@ -32,6 +32,11 @@ function school_init() {
 	if ( (int) get_option( 'users_can_register' ) !== 0 ) {
 		update_option( 'users_can_register', 0 );
 	}
+
+	// Hide admin bar for all roles except System Administrator.
+	if ( ! current_user_can( 'administrator' ) ) {
+		show_admin_bar( false );
+	}
 }
 add_filter( 'option_users_can_register', '__return_zero' );
 add_action( 'plugins_loaded', 'school_init' );

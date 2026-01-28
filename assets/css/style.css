@@ -218,12 +218,13 @@ body.admin-bar .dashboard-top-bar-enhanced {
 
 /* Notification Badge */
 .notif-badge {
-    background: #ff0000;
-    color: #fff;
+    background: #fff;
+    color: var(--school-primary);
     border-radius: 50%;
     padding: 2px 6px;
     font-size: 10px;
     margin-right: 5px;
+    font-weight: bold;
 }
 
 /* Sidebar */
