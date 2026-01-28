@@ -8,6 +8,7 @@
     --school-secondary: #D02752;
     --school-accent-1: #8A244B;
     --school-accent-2: #111F35;
+    --school-highlight: #fff5f5;
     --school-primary-hover: #D02752;
     --school-success: #166534;
     --school-danger: #F63049;
@@ -17,6 +18,8 @@
     --school-text-main: #111F35;
     --school-text-muted: #64748b;
     --school-card-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --school-font-family: inherit;
+    --school-font-size: 16px;
 }
 
 .school-advanced-dashboard, .school-dashboard-container {
@@ -245,7 +248,7 @@ body.admin-bar .dashboard-top-bar-enhanced {
 
 .sidebar-nav a:hover, .sidebar-nav li.active a {
     color: var(--school-primary);
-    background: #fff5f5;
+    background: var(--school-highlight);
 }
 
 .sidebar-nav li.active a {
@@ -547,7 +550,7 @@ input:focus, select:focus, textarea:focus {
 .subject-icon-box {
     width: 60px;
     height: 60px;
-    background: #fff5f5;
+    background: var(--school-highlight);
     color: var(--school-primary);
     border-radius: 15px;
     display: flex;

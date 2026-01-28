@@ -50,9 +50,6 @@ function school_render_supervisor_dashboard() {
 						<li class="nav-teacher-mgmt <?php echo $current_tab === 'teacher_mgmt' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'teacher_mgmt' ) ); ?>">إدارة شؤون المعلمين</a>
 						</li>
-						<li class="nav-teacher-assign <?php echo $current_tab === 'assignments' ? 'active' : ''; ?>">
-							<a href="<?php echo esc_url( add_query_arg( 'tab', 'assignments' ) ); ?>">توزيع المواد</a>
-						</li>
 						<li class="nav-coord-assign <?php echo $current_tab === 'coordinators' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'coordinators' ) ); ?>">تنسيق المواد</a>
 						</li>
@@ -83,9 +80,6 @@ function school_render_supervisor_dashboard() {
 				switch ( $current_tab ) {
 					case 'teacher_mgmt':
 						school_render_teacher_management_unified();
-						break;
-					case 'assignments':
-						school_render_assignment_view();
 						break;
 					case 'coordinators':
 						school_render_coordinator_assignment_view();
@@ -142,6 +136,11 @@ function school_render_dashboard_top_bar( $title ) {
 	?>
 	<div class="dashboard-top-bar-enhanced">
 		<div class="top-bar-brand-section">
+			<?php
+			$logo = get_option('school_logo');
+			if($logo): ?>
+				<img src="<?php echo esc_url($logo); ?>" class="top-bar-logo" style="max-height: 40px; margin-left: 15px;">
+			<?php endif; ?>
 			<h1 class="dashboard-main-title"><?php echo esc_html( $title ); ?></h1>
 			<div class="vertical-separator"></div>
 			<div class="welcome-greeting">السلام عليكم، <?php echo esc_html( $current_user->display_name ); ?></div>

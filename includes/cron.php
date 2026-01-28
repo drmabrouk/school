@@ -75,20 +75,21 @@ function school_perform_submission_check() {
 
 		if ( !$should_check ) continue;
 
-		// Get assigned subjects for this teacher from the schedule
-		$assigned = $wpdb->get_results( $wpdb->prepare("SELECT subject_id FROM $table_schedule WHERE teacher_id = %d", $t->id) );
+		// Get assigned subjects for this teacher from their record (Automatic Assignment)
+		$s_ids = maybe_unserialize($t->subject_ids);
+		if(!is_array($s_ids)) $s_ids = array_filter(explode(',', $t->subject_ids));
 		
-		foreach ( $assigned as $as ) {
-			// Check for submission TODAY (before 7 AM)
-			// Actually since cron runs at 7:01, we check if they submitted since midnight?
-			// Or since the start of the "preparation period". 
-			// Let's assume they must submit between yesterday 7 AM and today 7 AM.
-			$start_time = date('Y-m-d H:i:s', strtotime('yesterday 07:00:00'));
+		foreach ( $s_ids as $sid ) {
+			$sid = intval($sid);
+			if (!$sid) continue;
+
+			// Check for submission TODAY (before the deadline)
+			$start_time = date('Y-m-d H:i:s', strtotime('yesterday ' . date('H:i:s', strtotime(get_option('school_submission_deadline', '07:00')))));
 			
 			$lesson = $wpdb->get_row( $wpdb->prepare(
 				"SELECT * FROM $table_lessons WHERE teacher_id = %d AND subject_id = %d AND status IN ('submitted', 'approved') AND submission_date >= %s",
 				$t->id,
-				$as->subject_id,
+				$sid,
 				$start_time
 			) );
 
@@ -99,7 +100,7 @@ function school_perform_submission_check() {
 				array(
 					'lesson_id'          => $lesson ? $lesson->lesson_id : null,
 					'teacher_id'         => $t->id,
-					'subject_id'         => $as->subject_id,
+					'subject_id'         => $sid,
 					'status'             => $status,
 					'week_start_date'    => date('Y-m-d', strtotime('last monday')),
 					'checked_at'         => current_time('mysql'),
@@ -107,12 +108,12 @@ function school_perform_submission_check() {
 			);
 			
 			if ( $status === 'late' ) {
-				$sdata = $subjects_data[$as->subject_id] ?? 'مادة غير معروفة';
+				$sdata = $subjects_data[$sid] ?? 'مادة غير معروفة';
 				$sub_name = is_array($sdata) ? $sdata['name'] : $sdata;
 				school_add_notification( sprintf( 'تأخر المعلم %s في تسليم تحضير %s (اليوم: %s)', $t->name, $sub_name, date_i18n('l') ), 'late', $t->id );
 				
 				// Send email notification
-				school_notify_teacher_late_submission( $t->id, $as->subject_id );
+				school_notify_teacher_late_submission( $t->id, $sid );
 			}
 		}
 	}
