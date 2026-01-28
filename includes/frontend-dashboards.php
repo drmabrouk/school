@@ -50,6 +50,18 @@ function school_render_supervisor_dashboard() {
 						<li class="nav-teacher-mgmt <?php echo $current_tab === 'teacher_mgmt' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'teacher_mgmt' ) ); ?>">إدارة شؤون المعلمين</a>
 						</li>
+						<li class="nav-teacher-assign <?php echo $current_tab === 'assignments' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'assignments' ) ); ?>">توزيع المواد</a>
+						</li>
+						<li class="nav-coord-assign <?php echo $current_tab === 'coordinators' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'coordinators' ) ); ?>">تنسيق المواد</a>
+						</li>
+						<li class="nav-subjects <?php echo $current_tab === 'subjects' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'subjects' ) ); ?>">قائمة المواد</a>
+						</li>
+						<li class="nav-users <?php echo $current_tab === 'users' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'users' ) ); ?>">مستخدمي النظام</a>
+						</li>
 						<li class="nav-lessons <?php echo $current_tab === 'lessons' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'lessons' ) ); ?>">تحضيرات الدروس</a>
 						</li>
@@ -71,6 +83,18 @@ function school_render_supervisor_dashboard() {
 				switch ( $current_tab ) {
 					case 'teacher_mgmt':
 						school_render_teacher_management_unified();
+						break;
+					case 'assignments':
+						school_render_assignment_view();
+						break;
+					case 'coordinators':
+						school_render_coordinator_assignment_view();
+						break;
+					case 'subjects':
+						school_render_subjects_view();
+						break;
+					case 'users':
+						school_render_user_management_view();
 						break;
 					case 'late_reports':
 						school_render_late_reports_view();
@@ -147,29 +171,7 @@ function school_render_dashboard_top_bar( $title ) {
  * Unified Teacher Management view with sub-tabs.
  */
 function school_render_teacher_management_unified() {
-	$sub = isset($_GET['sub']) ? sanitize_text_field($_GET['sub']) : 'registry';
-	?>
-	<div class="content-section">
-		<div class="settings-sub-nav" style="display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
-			<a href="<?php echo esc_url( add_query_arg('sub', 'registry') ); ?>" class="sub-nav-item <?php echo $sub === 'registry' ? 'active' : ''; ?>">سجل المعلمين</a>
-			<a href="<?php echo esc_url( add_query_arg('sub', 'assignments') ); ?>" class="sub-nav-item <?php echo $sub === 'assignments' ? 'active' : ''; ?>">توزيع المواد</a>
-			<a href="<?php echo esc_url( add_query_arg('sub', 'coordinators') ); ?>" class="sub-nav-item <?php echo $sub === 'coordinators' ? 'active' : ''; ?>">تنسيق المواد</a>
-			<a href="<?php echo esc_url( add_query_arg('sub', 'subjects') ); ?>" class="sub-nav-item <?php echo $sub === 'subjects' ? 'active' : ''; ?>">قائمة المواد</a>
-			<a href="<?php echo esc_url( add_query_arg('sub', 'users') ); ?>" class="sub-nav-item <?php echo $sub === 'users' ? 'active' : ''; ?>">مستخدمي النظام</a>
-		</div>
-		
-		<?php 
-		switch($sub) {
-			case 'assignments': school_render_assignment_view(); break;
-			case 'coordinators': school_render_coordinator_assignment_view(); break;
-			case 'subjects': school_render_subjects_view(); break;
-			case 'users': school_render_user_management_view(); break;
-			case 'registry':
-			default: school_render_teacher_registry_view(); break;
-		}
-		?>
-	</div>
-	<?php
+	school_render_teacher_registry_view();
 }
 
 function school_render_coordinator_dashboard() {

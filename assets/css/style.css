@@ -4,14 +4,17 @@
  */
 
 :root {
-    --school-primary: #a00000; /* Dark Red */
-    --school-primary-hover: #800000;
+    --school-primary: #F63049;
+    --school-secondary: #D02752;
+    --school-accent-1: #8A244B;
+    --school-accent-2: #111F35;
+    --school-primary-hover: #D02752;
     --school-success: #166534;
-    --school-danger: #991b1b;
+    --school-danger: #F63049;
     --school-warning: #854d0e;
     --school-bg-white: #ffffff;
     --school-border: #eeeeee;
-    --school-text-main: #1d2327;
+    --school-text-main: #111F35;
     --school-text-muted: #64748b;
     --school-card-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
@@ -448,9 +451,9 @@ input:focus, select:focus, textarea:focus {
     font-weight: 700;
 }
 
-.badge-danger { background: #fee2e2; color: #991b1b; }
-.badge-warning { background: #fef9c3; color: #854d0e; }
-.badge-success { background: #dcfce7; color: #166534; }
+.badge-danger { background: #fff5f5; color: var(--school-primary); }
+.badge-warning { background: #fffbeb; color: #854d0e; }
+.badge-success { background: #f0fdf4; color: #166534; }
 
 .school-portal-wrapper {
     max-width: 1200px;
@@ -679,9 +682,9 @@ input:focus, select:focus, textarea:focus {
     font-weight: 700;
     text-transform: uppercase;
 }
-.status-submitted, .status-approved { background: #dcfce7; color: #166534; }
-.status-late { background: #fee2e2; color: #991b1b; }
-.status-pending, .status-draft { background: #fef9c3; color: #854d0e; }
+.status-submitted, .status-approved { background: #f0fdf4; color: #166534; }
+.status-late { background: #fff5f5; color: var(--school-primary); }
+.status-pending, .status-draft { background: #fffbeb; color: #854d0e; }
 
 /* Portal Standalone Styling */
 .school-portal-page #wpadminbar {
