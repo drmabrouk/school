@@ -23,6 +23,7 @@ require_once SCHOOL_PLUGIN_DIR . 'includes/views/notifications_view.php';
 require_once SCHOOL_PLUGIN_DIR . 'includes/views/lessons_all.php';
 require_once SCHOOL_PLUGIN_DIR . 'includes/views/late_reports.php';
 require_once SCHOOL_PLUGIN_DIR . 'includes/views/coordinator.php';
+require_once SCHOOL_PLUGIN_DIR . 'includes/views/submission_schedule.php';
 
 /**
  * Render the Supervisor Dashboard.
@@ -53,14 +54,14 @@ function school_render_supervisor_dashboard() {
 						<li class="nav-teacher-mgmt <?php echo $current_tab === 'teacher_mgmt' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'teacher_mgmt' ) ); ?>">إدارة شؤون المعلمين</a>
 						</li>
+						<li class="nav-schedule <?php echo $current_tab === 'schedule' ? 'active' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'tab', 'schedule' ) ); ?>">جدول مواعيد التسليم</a>
+						</li>
 						<li class="nav-coord-assign <?php echo $current_tab === 'coordinators' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'coordinators' ) ); ?>">تكليف منسقي المواد</a>
 						</li>
 						<li class="nav-subjects <?php echo $current_tab === 'subjects' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'subjects' ) ); ?>">إدارة المواد الأكاديمية</a>
-						</li>
-						<li class="nav-late-reports <?php echo $current_tab === 'late_reports' ? 'active' : ''; ?>">
-							<a href="<?php echo esc_url( add_query_arg( 'tab', 'late_reports' ) ); ?>">تقارير التأخير</a>
 						</li>
 						<li class="nav-print <?php echo $current_tab === 'print' ? 'active' : ''; ?>">
 							<a href="<?php echo esc_url( add_query_arg( 'tab', 'print' ) ); ?>">مركز الطباعة</a>
@@ -80,6 +81,9 @@ function school_render_supervisor_dashboard() {
 				switch ( $current_tab ) {
 					case 'teacher_mgmt':
 						school_render_teacher_management_unified();
+						break;
+					case 'schedule':
+						school_render_submission_schedule_view();
 						break;
 					case 'coordinators':
 						school_render_coordinator_assignment_view();
@@ -134,6 +138,10 @@ function school_render_dashboard_top_bar( $title ) {
 	$today = date_i18n( 'l j F Y' );
 	$late_count = school_get_late_count();
 
+	// Dynamic Greeting
+	$hour = current_time('G');
+	$greeting = ($hour < 12) ? 'صباح الخير' : 'مساء الخير';
+
 	$role_names = array(
 		'administrator'      => 'مدير النظام',
 		'school_manager'     => 'مدير المدرسة',
@@ -157,24 +165,31 @@ function school_render_dashboard_top_bar( $title ) {
 				<img src="<?php echo esc_url($logo); ?>" class="top-bar-logo" style="max-height: 40px; margin-left: 15px;">
 			<?php endif; ?>
 			<div class="header-titles-group">
-				<h1 class="dashboard-main-title">لوحة الإدارة</h1>
+				<h1 class="dashboard-main-title">لوحة إدارة التحضير</h1>
 				<div class="user-role-subtitle"><?php echo esc_html($user_role); ?></div>
 			</div>
 			<div class="vertical-separator"></div>
-			<div class="welcome-greeting">السلام عليكم، <?php echo esc_html( $current_user->display_name ); ?></div>
+			<div class="welcome-greeting"><?php echo esc_html($greeting); ?>، <?php echo esc_html( $current_user->display_name ); ?></div>
 		</div>
 
 		<div class="top-bar-info-actions">
 			<span class="header-date-enhanced"><?php echo esc_html( $today ); ?></span>
 			<div class="action-buttons-group">
 				<a href="<?php echo esc_url( add_query_arg( 'tab', 'late_reports' ) ); ?>" class="button btn-late-list">
+					<span class="dashicons dashicons-clock"></span>
 					<?php if ( $late_count > 0 ) : ?>
 						<span class="notif-badge"><?php echo $late_count; ?></span>
 					<?php endif; ?>
 					المتأخرين
 				</a>
-				<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'school_action', 'system_update' ), 'school_system_update' ) ); ?>" class="button btn-system-update">تحديث النظام</a>
-				<a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>" class="button btn-logout">تسجيل الخروج</a>
+				<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'school_action', 'system_update' ), 'school_system_update' ) ); ?>" class="button btn-system-update">
+					<span class="dashicons dashicons-update"></span>
+					تحديث النظام
+				</a>
+				<a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>" class="button btn-logout">
+					<span class="dashicons dashicons-exit"></span>
+					تسجيل الخروج
+				</a>
 			</div>
 		</div>
 	</div>

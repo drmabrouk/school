@@ -7,7 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function school_render_teacher_registry_view() {
 	global $wpdb;
 	$t_table = $wpdb->prefix . 'school_teachers';
-	$teachers = $wpdb->get_results("SELECT * FROM $t_table ORDER BY id DESC");
+
+	$limit = 5;
+	$paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+	$offset = ($paged - 1) * $limit;
+	$total_items = $wpdb->get_var("SELECT COUNT(*) FROM $t_table");
+	$total_pages = ceil($total_items / $limit);
+
+	$teachers = $wpdb->get_results($wpdb->prepare("SELECT * FROM $t_table ORDER BY id DESC LIMIT %d OFFSET %d", $limit, $offset));
 	$subjects = get_option('school_subjects', array());
 
 	if ( isset( $_GET['teacher_added'] ) ) {
@@ -45,7 +52,7 @@ function school_render_teacher_registry_view() {
 					<?php wp_nonce_field( 'school_settings_action', 'school_settings_nonce' ); ?>
 					<input type="hidden" name="teacher_id" value="<?php echo $edit_teacher->id; ?>">
 					<div>
-						<label>الرقم الوظيفي (Employee ID):</label>
+						<label>الرقم الوظيفي:</label>
 						<input type="text" name="teacher_employee_id" value="<?php echo esc_attr($edit_teacher->employee_id); ?>" required style="width: 100%;">
 					</div>
 					<div>
@@ -53,11 +60,11 @@ function school_render_teacher_registry_view() {
 						<input type="text" name="teacher_name" value="<?php echo esc_attr($edit_teacher->name); ?>" required style="width: 100%;">
 					</div>
 					<div>
-						<label>البريد الإلكتروني (اختياري):</label>
+						<label>البريد الإلكتروني:</label>
 						<input type="email" name="teacher_email" value="<?php echo esc_attr($edit_teacher->email); ?>" style="width: 100%;">
 					</div>
 					<div>
-						<label>رقم الهاتف (اختياري):</label>
+						<label>رقم الهاتف:</label>
 						<input type="text" name="teacher_phone" value="<?php echo esc_attr($edit_teacher->phone); ?>" style="width: 100%;">
 					</div>
 					<div>
@@ -88,7 +95,7 @@ function school_render_teacher_registry_view() {
 				<form method="post" class="grid-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
 					<?php wp_nonce_field( 'school_settings_action', 'school_settings_nonce' ); ?>
 					<div>
-						<label>الرقم الوظيفي (Employee ID):</label>
+						<label>الرقم الوظيفي:</label>
 						<input type="text" name="teacher_employee_id" required style="width: 100%;">
 					</div>
 					<div>
@@ -96,11 +103,11 @@ function school_render_teacher_registry_view() {
 						<input type="text" name="teacher_name" required style="width: 100%;">
 					</div>
 					<div>
-						<label>البريد الإلكتروني (اختياري):</label>
+						<label>البريد الإلكتروني:</label>
 						<input type="email" name="teacher_email" style="width: 100%;">
 					</div>
 					<div>
-						<label>رقم الهاتف (اختياري):</label>
+						<label>رقم الهاتف:</label>
 						<input type="text" name="teacher_phone" style="width: 100%;">
 					</div>
 					<div>
@@ -164,6 +171,13 @@ function school_render_teacher_registry_view() {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+			<?php if($total_pages > 1): ?>
+				<div class="pagination" style="margin-top: 20px; display: flex; gap: 5px; justify-content: center;">
+					<?php for($i=1; $i<=$total_pages; $i++): ?>
+						<a href="<?php echo esc_url( add_query_arg('paged', $i) ); ?>" class="button <?php echo ($i === $paged) ? 'button-primary' : ''; ?>"><?php echo $i; ?></a>
+					<?php endfor; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 
